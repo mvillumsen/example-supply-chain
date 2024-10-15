@@ -11,9 +11,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        go-version: [ '1.22', '1.23.x' ]
 
     steps:
     - name: Harden the runner (Audit all outbound calls)
@@ -26,7 +23,6 @@ jobs:
     - name: Set up Go 1.23.x
       uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
       with:
-        go-version: '1.23.x'
         go-version-file: "go.mod"
         cache: true
 
@@ -34,10 +30,4 @@ jobs:
       run: go build -v ./...
 
     - name: Test
-      run: go test -json > TestResults-${{ matrix.go-version }}.json
-
-    - name: Upload Go test results
-      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
-      with:
-        name: Go-results-${{ matrix.go-version }}
-        path: TestResults-${{ matrix.go-version }}.json
+      run: go test
