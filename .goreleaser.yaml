@@ -1,5 +1,8 @@
 version: 2
 
+env:
+  - REPOSITORY_OWNER={{ if index .Env "GITHUB_REPOSITORY_OWNER" }}{{ tolower .Env.GITHUB_REPOSITORY_OWNER }}{{ else }}local{{ end }}
+
 builds:
   - env:
       - CGO_ENABLED=0
@@ -47,7 +50,7 @@ signs:
 # https://goreleaser.com/customization/docker
 dockers:
   - image_templates:
-      - "ghcr.io/goreleaser/example-supply-chain:{{ .Tag }}"
+      - "ghcr.io/mvillumsen/example-supply-chain:{{ .Tag }}"
     dockerfile: Dockerfile
     build_flag_templates:
       - "--pull"
