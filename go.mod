@@ -1,3 +1,3 @@
-module github.com/mvillumsen/slsa-demo
+module github.com/mvillumsen/example-supply-chain
 
-go 1.23.2
+go 1.24.1
