@@ -1,0 +1,64 @@
+name: Build and Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: [1.22, 1.23, 1.24]
+
+    steps:
+    - name: Harden the runner (Audit all outbound calls)
+      uses: step-security/harden-runner@c6295a65d1254861815972266d5933fd6e532bdf # v2.11.1
+      with:
+        egress-policy: audit
+
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+    - name: Set up Go
+      uses: actions/setup-go@0aaccfd150d50ccaeb58ebd88d36e91967a5f35b # v5.4.0
+      with:
+        go-version: ${{ matrix.go-version }}
+        cache: true
+
+    # Uncomment the following lines if you want to cache Go modules
+    # - name: Cache Go Modules
+    #   uses: actions/cache@v3 # v3
+    #   with:
+    #     path: |
+    #       ~/.cache/go-build
+    #       ~/go/pkg/mod
+    #     key: ${{ runner.os }}-go-${{ matrix.go-version }}-${{ hashFiles('**/go.sum') }}
+    #     restore-keys: |
+    #       ${{ runner.os }}-go-${{ matrix.go-version }}-
+
+    # - name: Install Dependencies
+    #   run: go mod tidy
+
+    - name: golangci-lint
+      uses: golangci/golangci-lint-action@v7
+      with:
+        version: v2.0
+    # - name: Install golangci-lint
+    #   run: |
+    #    curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.54.2
+
+    # - name: Run Linter
+    #   run: golangci-lint run ./...
+
+    - name: Build
+      run: go build -v ./...
+
+    - name: Test
+      run: go test -v ./...
