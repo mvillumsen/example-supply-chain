@@ -1,4 +1,4 @@
-FROM gcr.io/distroless/static@sha256:3d0f463de06b7ddff27684ec3bfd0b54a425149d0f8685308b1fdf297b0265e9
+FROM gcr.io/distroless/static@sha256:4b2a093ef4649bccd586625090a3c668b254cfe180dee54f4c94f3e9bd7e381e
 WORKDIR /
 COPY example-supply-chain /example-supply-chain
 USER 65532:65532
